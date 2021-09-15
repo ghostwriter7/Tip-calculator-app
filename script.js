@@ -1,77 +1,140 @@
-const form = document.querySelector("form");
-const billEl = document.querySelector("#bill");
-const tipEl = document.querySelector(".wrapper");
-const peopleEl = document.querySelector("#people");
+const form = document.getElementById("form");
 
-const tipAmount = document.querySelector(".tipAmount");
-const total = document.querySelector(".sum");
-const reset = document.querySelector(".reset");
+const billInputField = document.getElementById("bill");
+const radioBtns = document.querySelectorAll('input[name="percentage"');
+const customOption = document.querySelector("#custom");
+const peopleInputField = document.getElementById("people");
+const tipAmount = document.getElementById("tipPerPerson");
+const totalAmount = document.getElementById("totalPerPerson");
+const resetBtn = document.getElementById("reset");
 
-let tip = 0.15;
+let percentage = 0.05;
 
-// tipEl.addEventListener("click", function (e) {
-//   if (!e.target.classList.contains("btn")) return;
-//   if (e.target.classList.contains("custom")) {
-//     e.target.classList.add("hidden");
-//     document.querySelector("input.customInput").classList.remove("hidden");
-//   }
-//   console.log(e.target);
-// });
+init();
+resetBtn.addEventListener("click", init);
 
-// const checkData = function (inputField) {
-//   if (
-//     !Number.isFinite(+inputField.value.trim()) ||
-//     +inputField.value.trim() < 0 ||
-//     inputField.value.trim() === ""
-//   ) {
-//     inputField.previousElementSibling.classList.remove("hidden");
-//     inputField.style.border = "3px solid red";
+radioBtns.forEach((input) => {
+  input.addEventListener("click", () => {
+    customOption.value = "";
+    input.closest(".form-control").className = "form-control";
+    percentage = +input.value;
+  });
+});
 
-//     return false;
-//   } else {
-//     inputField.previousElementSibling.classList.add("hidden");
-//     inputField.style.border = "3px solid green";
+customOption.addEventListener("click", () => {
+  radioBtns.forEach((option) => {
+    option.checked = false;
+  });
+});
 
-//     return true;
-//   }
-// };
+customOption.addEventListener("keyup", (e) => {
+  if (e.key === "Tab") return;
+  else percentage = +customOption.value / 100;
+});
 
-// form.addEventListener("submit", function (e) {
-//   e.preventDefault();
-//   const billValidation = checkData(billEl);
-//   const peopleValidation = checkData(peopleEl);
-//   if (!billValidation || !peopleValidation) return;
-//   const bill = billEl.value;
-//   const people = peopleEl.value;
-//   const tipAmount = console.log(billEl.value, peopleEl.value);
-// });
+form.addEventListener("change", () => (resetBtn.disabled = false));
+window.addEventListener("keydown", (e) => {
+  resetBtn.disabled = false;
+  if (e.key === "Enter") {
+    if (!checkInputs()) return;
 
-//User inputs bill value
+    const bill = +billInputField.value;
+    const numOfPeople = +peopleInputField.value;
 
-//Check if data is safe
+    const { tipPerPerson, totalPerPerson } = calcPerPerson(
+      bill,
+      percentage,
+      numOfPeople
+    );
 
-//User selects appropiate tip %
+    updateSummaryPanel(tipPerPerson, totalPerPerson);
+  }
+});
 
-//If regular button - update variable with percentage
+function checkInputs() {
+  const bill = billInputField.value.trim();
+  const numOfPeople = peopleInputField.value.trim();
 
-//If custom button, display input field
+  if (bill === "") {
+    setErrorFor(billInputField, "Can't be empty!");
+  } else if (+bill <= 0) {
+    setErrorFor(billInputField, "Must be a positive integer!");
+  } else {
+    setSuccessFor(billInputField);
+  }
 
-//Check if data is safe
+  if (numOfPeople === "") {
+    setErrorFor(peopleInputField, "Can't be empty!");
+  } else if (numOfPeople <= 0) {
+    setErrorFor(peopleInputField, "Must be a positive integer!");
+  } else {
+    setSuccessFor(peopleInputField);
+  }
 
-//User types amount of people
+  //If radio inputs are UNCHECKED, #CUSTOM must be focused, so function checks its value
+  if ([...radioBtns].every((option) => !option.checked)) {
+    const customValue = customOption.value.trim();
+    if (customValue === "" || customValue <= 0) {
+      setErrorFor(customOption);
+      customOption.classList.add("error");
+      customOption.classList.remove("success");
+    } else {
+      setSuccessFor(customOption);
+      customOption.classList.remove("error");
+      customOption.classList.add("success");
+    }
+  } else {
+    customOption.classList.remove("error");
+    customOption.classList.remove("success");
+  }
 
-//Check if data is safe
+  if (
+    [...document.querySelectorAll(".form-control")].some((control) =>
+      control.classList.contains("error")
+    )
+  )
+    return false;
+  else return true;
+}
 
-//User types enter
-//Display errors if any occured
+function setErrorFor(input, msg = "") {
+  const formControl = input.closest(".form-control");
+  formControl.className = "form-control error";
+  formControl.querySelector("small").innerText = msg;
+}
 
-//If OK:
-//Calc tip amount per person
+function setSuccessFor(input) {
+  const formControl = input.closest(".form-control");
+  formControl.className = "form-control success";
+  formControl.querySelector("small").innerText = "";
+}
 
-//Display tip amount per person
+function calcPerPerson(bill, percentage, numOfPeople) {
+  const tipPerPerson = (bill / numOfPeople) * percentage;
+  const totalPerPerson = bill / numOfPeople + tipPerPerson;
+  return {
+    tipPerPerson: tipPerPerson,
+    totalPerPerson: totalPerPerson,
+  };
+}
 
-//Calc total (tip + bill) per person
+function updateSummaryPanel(tipPerPerson, totalPerPerson) {
+  tipAmount.innerText = `$${tipPerPerson.toFixed(2)}`;
+  totalAmount.innerText = `$${totalPerPerson.toFixed(2)}`;
+}
 
-//Display total (tip + bill) per person
-
-//User clicks reset - bring all to ZERO
+function init() {
+  billInputField.value = "";
+  customOption.value = "";
+  peopleInputField.value = "";
+  updateSummaryPanel(0, 0);
+  radioBtns.forEach((option) => {
+    option.checked = false;
+  });
+  [...radioBtns][0].checked = true;
+  percentage = +[...radioBtns][0].value;
+  document
+    .querySelectorAll(".form-control")
+    .forEach((control) => (control.className = "form-control"));
+  resetBtn.disabled = true;
+}

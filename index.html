@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- displays site properly based on user's device -->
-    <link rel="stylesheet" type="text/css" href="style.css" />
 
     <link
       rel="icon"
@@ -12,6 +11,7 @@
       sizes="32x32"
       href="./images/favicon-32x32.png"
     />
+    <link rel="stylesheet" href="style.css" type="text/css" />
     <script src="script.js" defer></script>
     <title>Frontend Mentor | Tip calculator app</title>
 
@@ -25,88 +25,77 @@
         color: hsl(228, 45%, 44%);
       }
     </style>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
   </head>
   <body>
-    <header></header>
+    <header><img src="images/logo.svg" /></header>
+
     <main>
-      <div class="app">
-        <div class="left">
-          <form>
-            <div class="inputIcons">
-              <label for="bill">Bill</label>
-              <span
-                ><img src="images/icon-dollar.svg" alt="Dollar icon"
-              /></span>
-              <label class="wrongData hidden">Wrong Data!</label>
-              <input
-                class="input"
-                type="text"
-                name="bill"
-                id="bill"
-                placeholder="0"
-              />
-            </div>
-            <div>
-              <label for="tip">Select Tip %</label>
-              <div class="wrapper">
-                <input type="radio" id="5" value="0.05" name="percentage" />
-                <label for="5">5%</label>
-                <input type="radio" value="0.1" name="percentage" id="10" />
-                <label for="10">10%</label>
-                <input
-                  type="radio"
-                  class="btn active"
-                  value="0.15"
-                  name="percentage"
-                  id="15"
-                />
-                <label for="15">15%</label>
-                <input type="radio" value="0.25" name="percentage" id="25" />
-                <label for="25">25%</label>
-                <input type="radio" value="0.5" name="percentage" id="50" />
-                <label for="50">50%</label>
-                <input
-                  type="number"
-                  name="percentage"
-                  id="custom"
-                  placeholder="Custom..."
-                />
-              </div>
-            </div>
+      <section>
+        <form id="form">
+          <div class="form-control">
+            <label class="label__header" for="bill">Bill</label>
+            <i class="fas fa-dollar-sign icon"></i>
+            <input
+              class="input-field"
+              type="number"
+              placeholder="0"
+              id="bill"
+            />
 
-            <div class="inputIcons">
-              <label for="people">Number of People</label>
-              <span class
-                ><img src="images/icon-person.svg" alt="Person icon"
-              /></span>
-              <label class="wrongData hidden">Wrong Data!</label>
-              <input
-                class="input"
-                id="people"
-                type="text"
-                name="people"
-                placeholder="0"
-              />
-            </div>
-          </form>
-        </div>
-
-        <div class="right">
-          <div>
-            <div class="grid">
-              <div class="label">Tip Amount</div>
-              <div class="unit">/ person</div>
-              <div class="total tipAmount">$0.00</div>
-            </div>
-            <div class="grid">
-              <div class="label">Total</div>
-              <div class="unit">/ person</div>
-              <div class="total sum">$0.00</div>
+            <small></small>
+          </div>
+          <div class="form-control tip">
+            <label class="label__header">Select Tip %</label>
+            <div class="wrapper__options">
+              <input type="radio" id="5%" name="percentage" value="0.05" />
+              <label for="5%" value="5%">5%</label>
+              <input type="radio" id="10%" name="percentage" value="0.1" />
+              <label for="10%">10%</label>
+              <input type="radio" id="15%" name="percentage" value="0.15" />
+              <label for="15%">15%</label>
+              <input type="radio" id="25%" name="percentage" value="0.25" />
+              <label for="25%">25%</label>
+              <input type="radio" id="50%" name="percentage" value="0.5" />
+              <label for="50%">50%</label>
+              <input type="number" id="custom" placeholder="Custom" />
+              <small></small>
             </div>
           </div>
-          <button id="reset" class="reset">Reset</button>
+          <div class="form-control">
+            <label class="label__header" for="people">Number of People</label>
+            <i class="fas fa-user-alt icon"></i>
+            <input
+              class="input-field"
+              placeholder="0"
+              type="number"
+              id="people"
+            />
+            <small></small>
+          </div>
+        </form>
+      </section>
+      <section>
+        <div class="container">
+          <div class="wrapper">
+            <div class="label">Tip Amount</div>
+            <div class="unit">/ person</div>
+            <div class="value" id="tipPerPerson">$0.00</div>
+          </div>
+          <div class="wrapper">
+            <div class="label">Total</div>
+            <div class="unit">/ person</div>
+            <div class="value" id="totalPerPerson">$0.00</div>
+          </div>
         </div>
-      </div>
+        <button id="reset">Reset</button>
+      </section>
     </main>
 
     <footer>
