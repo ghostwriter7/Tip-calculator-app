@@ -17,6 +17,7 @@ radioBtns.forEach((input) => {
   input.addEventListener("click", () => {
     customOption.value = "";
     input.closest(".form-control").className = "form-control";
+    clearCustomClasses();
     percentage = +input.value;
   });
 });
@@ -84,8 +85,7 @@ function checkInputs() {
       customOption.classList.add("success");
     }
   } else {
-    customOption.classList.remove("error");
-    customOption.classList.remove("success");
+    clearCustomClasses();
   }
 
   if (
@@ -137,4 +137,11 @@ function init() {
     .querySelectorAll(".form-control")
     .forEach((control) => (control.className = "form-control"));
   resetBtn.disabled = true;
+  clearCustomClasses();
+  billInputField.focus();
+}
+
+function clearCustomClasses() {
+  customOption.classList.remove("error");
+  customOption.classList.remove("success");
 }
